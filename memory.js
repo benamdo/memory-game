@@ -26,13 +26,13 @@ function fetchPhotos(source) {
 
     switch (source) {
         case 'harry-potter':
-            apiUrl = 'https://hp-api.herokuapp.com/api/characters';
+            apiUrl = 'https://hp-api.onrender.com/api/characters'; // Example Harry Potter API endpoint
             break;
         case 'dogs':
-            apiUrl = 'https://dog.ceo/api/breeds/image/random/8';
+            apiUrl = 'https://dog.ceo/api/breeds/image/random/8'; // Example Dogs API endpoint
             break;
         case 'country-flags':
-            apiUrl = 'https://www.countryflagsapi.com/api/v5/flags';
+            apiUrl = 'https://restcountries.com/v3.1/all'; // Example Country Flags API endpoint
             break;
         default:
             return;
@@ -60,7 +60,7 @@ function processData(data, source) {
             imageUrls = data.message;
             break;
         case 'country-flags':
-            imageUrls = data.map(flag => flag.imagePath);
+            imageUrls = data.map(country => country.flags[16]);
             break;
     }
 
@@ -77,25 +77,34 @@ function shuffleArray(array) {
     return array;
 }
 
+
+
 function startMemoryGameWithImages(images) {
     const gameBoard = document.getElementById('game');
     gameBoard.innerHTML = '';
+    gameBoard.classList.remove('face-down');
 
-    images.forEach((imageUrl, index) => {
+    // Shuffle the images
+    images = shuffleArray(images);
+
+    // Create and append 16 cards (8 pairs)
+    for (let i = 0; i < 16; i++) {
         const card = document.createElement('div');
-        card.classList.add('memory-card', 'flipped'); // Cards start flipped
-        card.dataset.card = `card-${index}`;
-        card.style.backgroundImage = `url(${imageUrl})`;
+        card.classList.add('memory-card', 'flipped');
+        card.dataset.card = `card-${i}`;
+        card.style.backgroundImage = `url(${images[i]})`;
         card.addEventListener('click', flipCard);
         gameBoard.appendChild(card);
-    });
+    }
 
-    // Use a timeout to flip the cards face-down after a brief delay
     setTimeout(() => {
         const allCards = document.querySelectorAll('.memory-card');
         allCards.forEach(card => card.classList.remove('flipped'));
-    }, 2000); // Adjust the delay as needed
+    }, 2000);
 }
+
+
+
 
 let flippedCards = [];
 let isFlipping = false;
@@ -134,6 +143,7 @@ function checkForMatch() {
 function resetGame() {
     const gameBoard = document.getElementById('game');
     gameBoard.innerHTML = '';
+    gameBoard.classList.add('face-down'); // Add the face-down class back
 }
 
 
