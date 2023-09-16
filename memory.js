@@ -26,13 +26,13 @@ function fetchPhotos(source) {
 
     switch (source) {
         case 'harry-potter':
-            apiUrl = 'https://github.com/fedeperin/harry-potter-api'; // Example Harry Potter API endpoint
+            apiUrl = 'https://hp-api.herokuapp.com/api/characters';
             break;
         case 'dogs':
-            apiUrl = 'https://dog.ceo/api/breeds/image/random/8'; // Example Dogs API endpoint
+            apiUrl = 'https://dog.ceo/api/breeds/image/random/8';
             break;
         case 'country-flags':
-            apiUrl = 'https://restcountries.com/v3.1/all'; // Example Country Flags API endpoint
+            apiUrl = 'https://www.countryflagsapi.com/api/v5/flags';
             break;
         default:
             return;
@@ -60,18 +60,14 @@ function processData(data, source) {
             imageUrls = data.message;
             break;
         case 'country-flags':
-            
-            imageUrls = data.map(country => country.flags[0]);
+            imageUrls = data.map(flag => flag.imagePath);
             break;
     }
 
-    
+    // Duplicate and shuffle the image URLs to create pairs for the memory game
     const imagePairs = [...imageUrls, ...imageUrls];
     return shuffleArray(imagePairs);
 }
-
-
-
 
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -100,7 +96,6 @@ function startMemoryGameWithImages(images) {
         allCards.forEach(card => card.classList.remove('flipped'));
     }, 2000); // Adjust the delay as needed
 }
-
 
 let flippedCards = [];
 let isFlipping = false;
@@ -140,6 +135,7 @@ function resetGame() {
     const gameBoard = document.getElementById('game');
     gameBoard.innerHTML = '';
 }
+
 
 
 
